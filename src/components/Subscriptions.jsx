@@ -94,7 +94,6 @@ export default function Subscriptions() {
         }
     }, [toggle])
 
-    console.log(response)
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -111,7 +110,6 @@ export default function Subscriptions() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
 
     return (
         <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
@@ -142,7 +140,7 @@ export default function Subscriptions() {
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
-                                    navigate('/order-detail', {state: {id: row?.id}})
+                                    navigate('/subscription-detail', {state: {id: row?.id}})
                                 }}
                             >
                                 <TableCell component="th" scope="row">
@@ -158,7 +156,9 @@ export default function Subscriptions() {
                                 <TableCell align="right">
                                     {row?.expirationDate}
                                 </TableCell>
-                                <TableCell align="right">{parseInt(row?.price).toLocaleString('en')}</TableCell>
+                                <TableCell align="right" sx={{bgcolor: row?.debt !== '0.00' ? 'red' : ''}}>
+                                    {parseInt(row?.price).toLocaleString('en')}
+                                </TableCell>
                                 <TableCell align="right">{row?.phone}</TableCell>
                                 <TableCell align="right">{parseInt(row?.debt).toLocaleString('en')}</TableCell>
                             </TableRow>

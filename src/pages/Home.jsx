@@ -8,6 +8,7 @@ import TrainingOrders from "../components/TrainingOrders";
 import BilliardOrders from "../components/BilliardOrders";
 import Subscriptions from "../components/Subscriptions";
 import Logout from "../components/Logout";
+import Economics from "../components/Economics";
 
 export default function Home() {
     const menu = useSelector(state => state.menuList)
@@ -26,7 +27,9 @@ export default function Home() {
                                 ? <BilliardOrders/>
                                 : menu.subscriptions
                                     ? <Subscriptions/>
-                                    : <Logout/>
+                                    : menu.economics
+                                        ? <Economics/>
+                                        : <Logout/>
             }
         </div>
     )

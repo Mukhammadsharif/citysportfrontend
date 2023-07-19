@@ -5,6 +5,7 @@ import {changeActiveMenu} from "../store/features/activeMenuSlice";
 export default function CustomMenu() {
     const dispatch = useDispatch()
     const menu = useSelector(state => state.menuList)
+    const userType = localStorage.getItem('userType')
 
     return (
         <div style={{
@@ -29,7 +30,8 @@ export default function CustomMenu() {
                             training: false,
                             exit: true,
                             subscriptions: false,
-                            detail: false
+                            detail: false,
+                            economics: false,
                         }
                     ))
                 }}
@@ -48,7 +50,8 @@ export default function CustomMenu() {
                             training: false,
                             exit: false,
                             subscriptions: false,
-                            detail: false
+                            detail: false,
+                            economics: false,
                         }
                     ))
                 }}
@@ -67,7 +70,8 @@ export default function CustomMenu() {
                             training: false,
                             exit: false,
                             subscriptions: false,
-                            detail: false
+                            detail: false,
+                            economics: false,
                         }
                     ))
                 }}
@@ -86,7 +90,8 @@ export default function CustomMenu() {
                             training: false,
                             exit: false,
                             subscriptions: false,
-                            detail: false
+                            detail: false,
+                            economics: false,
                         }
                     ))
                 }}
@@ -105,7 +110,8 @@ export default function CustomMenu() {
                             training: true,
                             exit: false,
                             subscriptions: false,
-                            detail: false
+                            detail: false,
+                            economics: false,
                         }
                     ))
                 }}
@@ -124,13 +130,36 @@ export default function CustomMenu() {
                             training: false,
                             exit: false,
                             subscriptions: true,
-                            detail: false
+                            detail: false,
+                            economics: false,
                         }
                     ))
                 }}
                 className={'menu-item'}>
                 Абонементы
             </div>
+
+            {userType === 'admin' ? (
+                <div
+                    onClick={() => {
+                        dispatch(changeActiveMenu(
+                            {
+                                all: false,
+                                sauna: false,
+                                pool: false,
+                                billiard: false,
+                                training: false,
+                                exit: false,
+                                subscriptions: false,
+                                detail: false,
+                                economics: true,
+                            }
+                        ))
+                    }}
+                    className={'menu-item'}>
+                    Отчеты
+                </div>
+            ) : ''}
 
             <div
                 onClick={() => {
@@ -143,7 +172,8 @@ export default function CustomMenu() {
                             training: false,
                             exit: true,
                             subscriptions: false,
-                            detail: false
+                            detail: false,
+                            economics: false,
                         }
                     ))
                 }}

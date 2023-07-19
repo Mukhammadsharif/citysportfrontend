@@ -9,6 +9,7 @@ const initialState = {
     exit: false,
     detail: false,
     subscriptions: false,
+    economics: false,
 }
 
 export const ActiveMenuSlice = createSlice({

@@ -10,6 +10,8 @@ export const GET_NOTIFICATIONS = 'api/notifications/'
 
 export const GET_SUBSCRIPTIONS = 'api/subscription_list/'
 
+export const SUBSCRIPTION_DETAIL = 'api/subscription_detail/id/'
+
 export const CREATE_SUBSCRIPTION = 'api/subscription_list/'
 
 export const GET_TYPES_LIST_FOR_ORDER = 'api/types/'

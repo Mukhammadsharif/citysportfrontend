@@ -183,7 +183,9 @@ export default function BilliardOrders() {
                                         {/*<div>{`${new Date(row.dateExit).getFullYear()}-${new Date(row.dateExit).getMonth()}-${new Date(row.dateExit).getDate()}`}</div>*/}
                                     </div>
                                 </TableCell>
-                                <TableCell align="right">{parseInt(row?.summ).toLocaleString('en')}</TableCell>
+                                <TableCell align="right" sx={{bgcolor: parseInt(row?.debt) ? 'red' : ''}}>
+                                    {parseInt(row?.summ).toLocaleString('en')}
+                                </TableCell>
                                 <TableCell align="right">{row?.number}</TableCell>
                                 <TableCell align="right">{row.shortsNumber}</TableCell>
                                 <TableCell align="right">{row.relax ? 'Да' : 'Нет'}</TableCell>

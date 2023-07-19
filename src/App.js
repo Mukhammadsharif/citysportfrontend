@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import PrivateRoutes from "./components/PrivateRoutes";
 import OrderDetail from "./pages/OrderDetail";
 import Notifications from "./pages/Notifications";
+import SubscriptionDetail from "./pages/SubscriptionDetail";
 
 function Router() {
     return (
@@ -19,6 +20,7 @@ function Router() {
                         <Route element={<Home/>} path={'/'}/>
                         <Route element={<OrderDetail/>} path={'/order-detail'}/>
                         <Route element={<Notifications/>} path={'/notifications'}/>
+                        <Route element={<SubscriptionDetail/>} path={'/subscription-detail'}/>
                     </Route>
                 </Routes>
             </HashRouter>
