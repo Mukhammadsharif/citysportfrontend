@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/citysportfrontend/static/css/main.536ac180.css",
+    "main.js": "/citysportfrontend/static/js/main.6beb9dff.js",
+    "static/media/logo.png": "/citysportfrontend/static/media/logo.400c8f763c1f8c78c8dc.png",
+    "index.html": "/citysportfrontend/index.html",
+    "main.536ac180.css.map": "/citysportfrontend/static/css/main.536ac180.css.map",
+    "main.6beb9dff.js.map": "/citysportfrontend/static/js/main.6beb9dff.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.536ac180.css",
+    "static/js/main.6beb9dff.js"
+  ]
+}
