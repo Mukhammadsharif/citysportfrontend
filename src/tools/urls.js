@@ -1,11 +1,19 @@
-export const GET_DEPARTMENTS = 'language/api/v1/departament/'
+export const REGISTER_USER = 'api/register'
 
-export const GET_DEPARTMENT_DETAIL = 'language/api/v1/departament/id'
+export const LOGIN_USER = 'api/login'
 
-export const GET_SERVICES = 'language/api/v1/service/'
+export const GET_ALL_ORDERS = 'api/orders'
 
-export const GET_SERVICES_DETAIL = 'language/api/v1/service/id'
+export const CREATE_ORDER = 'api/orders/'
 
-export const GET_NEWS = 'language/api/v1/news/'
+export const GET_NOTIFICATIONS = 'api/notifications/'
 
-export const GET_NEWS_DETAIL = 'language/api/v1/news/id'
+export const GET_SUBSCRIPTIONS = 'api/subscription_list/'
+
+export const CREATE_SUBSCRIPTION = 'api/subscription_list/'
+
+export const GET_TYPES_LIST_FOR_ORDER = 'api/types/'
+
+export const SET_BUSY_TYPE_NUMBER_FOR_ORDER = `api/types/id/`
+
+export const ORDER_DETAIL = 'api/orders/id/'

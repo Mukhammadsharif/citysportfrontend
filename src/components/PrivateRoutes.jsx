@@ -1,8 +1,7 @@
-import { Navigate, Outlet } from 'react-router-dom'
-import { isAuthenticated } from '../tools/auth'
+import {Navigate, Outlet} from 'react-router-dom'
 
 const PrivateRoutes = () => {
-    return isAuthenticated() ? <Outlet /> : <Navigate to="/login" />
+    return localStorage.getItem('token') ? <Outlet/> : <Navigate to="/login"/>
 }
 
 export default PrivateRoutes

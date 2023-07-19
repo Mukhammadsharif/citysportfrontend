@@ -1,1 +1,1 @@
-export const LANGUAGE = "app-assistance-language";
+export const LANGUAGE = "app-citysport-language";

@@ -1,19 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { LANGUAGE } from '../../tools/constant'
+import {createSlice} from '@reduxjs/toolkit'
 
-const initialState = localStorage.getItem(LANGUAGE) ? localStorage.getItem(LANGUAGE) : 'uz'
+const initialState = false
 
-export const languageSlice = createSlice({
-    name: 'languageChange',
+export const toggleSlice = createSlice({
+    name: 'toggle',
     initialState,
     reducers: {
-        changeLanguage: (state, action) => {
+        changeToggle: (state, action) => {
             state = action.payload
             return state
         },
     },
 })
 
-export const { changeLanguage } = languageSlice.actions
+export const {changeToggle} = toggleSlice.actions
 
-export default languageSlice.reducer
+export default toggleSlice.reducer

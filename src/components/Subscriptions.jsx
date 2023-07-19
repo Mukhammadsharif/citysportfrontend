@@ -7,10 +7,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {useLoad} from "../hooks/request";
-import {GET_ALL_ORDERS} from "../tools/urls";
+import {GET_SUBSCRIPTIONS} from "../tools/urls";
 import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {changeActiveMenu} from "../store/features/activeMenuSlice";
+import {useDispatch, useSelector} from "react-redux";
 import {TableFooter, TablePagination} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -20,6 +19,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import PropTypes from "prop-types";
+import CreateSubscription from "./CreateSubscription";
 
 function TablePaginationActions(props) {
     const theme = useTheme();
@@ -82,16 +82,17 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function AllOrders() {
+export default function Subscriptions() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const toggle = useSelector(state => state.toggle)
     const token = localStorage.getItem('token')
     const {response} = useLoad({
-        url: GET_ALL_ORDERS,
+        url: GET_SUBSCRIPTIONS,
         headers: {
             Authorization: `Token ${token}`
         }
-    }, [])
+    }, [toggle])
 
     console.log(response)
 
@@ -113,110 +114,78 @@ export default function AllOrders() {
 
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{minWidth: '100%'}} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell sx={{fontWeight: 900}}>Тип</TableCell>
-                        <TableCell align="right" sx={{fontWeight: 900}}>Номер</TableCell>
-                        <TableCell align="right" sx={{fontWeight: 900}}>Вход</TableCell>
-                        <TableCell align="right" sx={{fontWeight: 900}}>Выход</TableCell>
-                        <TableCell align="right" sx={{fontWeight: 900}}>Сумма</TableCell>
-                        <TableCell align="right" sx={{fontWeight: 900}}>Количество</TableCell>
-                        <TableCell align="right" sx={{fontWeight: 900}}>Плавки</TableCell>
-                        <TableCell align="right" sx={{fontWeight: 900}}>Массаж</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {(rowsPerPage > 0
-                            ? response?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : response
-                    )?.toReversed().map((row) => (
-                        <TableRow
-                            key={row.id}
-                            sx={{
-                                '&:last-child td, &:last-child th': {border: 0},
-                                backgroundColor: row.isClosed ? '#00DFC8' : '',
-                                cursor: 'pointer'
-                            }}
-                            onClick={() => {
-                                dispatch(changeActiveMenu(
-                                    {
-                                        all: false,
-                                        sauna: false,
-                                        pool: false,
-                                        billiard: false,
-                                        training: false,
-                                        exit: false,
-                                        detail: true
-                                    }
-                                ))
-                                navigate('/order-detail', {state: {id: row.id}})
-                            }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.type === 'sauna'
-                                    ? 'Сауна'
-                                    : row.type === 'pool'
-                                        ? 'Бассейе'
-                                        : row.type === 'billiard'
-                                            ? 'Биллиард'
-                                            : 'Трен/Зал'
-
-                                }
-                            </TableCell>
-
-                            <TableCell align="right">
-                                {row.type === 'sauna'
-                                    ? row?.sauna?.name
-                                    : row.type === 'pool'
-                                        ? row?.pool?.name
-                                        : row.type === 'billiard'
-                                            ? row?.billiard?.name
-                                            : row?.training?.name
-
-                                }
-                            </TableCell>
-                            <TableCell align="right">
-                                <div style={{display: 'flex', flexDirection: 'column'}}>
-                                    <div>{`${new Date(row.dateEntered).getHours()}:${new Date(row.dateEntered).getMinutes()}`}</div>
-                                    {/*<div>{`${new Date(row.dateEntered).getFullYear()}-${new Date(row.dateEntered).getMonth()}-${new Date(row.dateEntered).getDate()}`}</div>*/}
-                                </div>
-                            </TableCell>
-                            <TableCell align="right">
-                                <div style={{display: 'flex', flexDirection: 'column'}}>
-                                    <div>{`${new Date(row.dateExit).getHours()}:${new Date(row.dateExit).getMinutes()}`}</div>
-                                    {/*<div>{`${new Date(row.dateExit).getFullYear()}-${new Date(row.dateExit).getMonth()}-${new Date(row.dateExit).getDate()}`}</div>*/}
-                                </div>
-                            </TableCell>
-                            <TableCell align="right">{row?.summ}</TableCell>
-                            <TableCell align="right">{row?.number}</TableCell>
-                            <TableCell align="right">{row.shortsNumber}</TableCell>
-                            <TableCell align="right">{row.relax ? 'Да' : 'Нет'}</TableCell>
+        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <CreateSubscription/>
+            <TableContainer component={Paper}>
+                <Table sx={{minWidth: '100%'}} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{fontWeight: 900}}>Имя</TableCell>
+                            <TableCell align="right" sx={{fontWeight: 900}}>Тип</TableCell>
+                            <TableCell align="right" sx={{fontWeight: 900}}>Начало</TableCell>
+                            <TableCell align="right" sx={{fontWeight: 900}}>Конец</TableCell>
+                            <TableCell align="right" sx={{fontWeight: 900}}>Сумма</TableCell>
+                            <TableCell align="right" sx={{fontWeight: 900}}>Телефон</TableCell>
+                            <TableCell align="right" sx={{fontWeight: 900}}>Задолжность</TableCell>
                         </TableRow>
-                    ))}
-                    {emptyRows > 0 && (
-                        <TableRow style={{height: 53 * emptyRows}}>
-                            <TableCell colSpan={6}/>
-                        </TableRow>
-                    )}
-                </TableBody>
+                    </TableHead>
+                    <TableBody>
+                        {(rowsPerPage > 0
+                                ? response?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                : response
+                        )?.toReversed().map((row) => (
+                            <TableRow
+                                key={row.id}
+                                sx={{
+                                    '&:last-child td, &:last-child th': {border: 0},
+                                    backgroundColor: row.isClosed ? '#00DFC8' : '',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    navigate('/order-detail', {state: {id: row?.id}})
+                                }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {row?.name}
+                                </TableCell>
 
-                <TableFooter>
-                    <TableRow>
-                        <TablePagination
-                            rowsPerPageOptions={[{label: 'All', value: -1}, 50, 25, 10]}
-                            colSpan={10}
-                            count={response?.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            ActionsComponent={TablePaginationActions}
-                        />
-                    </TableRow>
-                </TableFooter>
-            </Table>
-        </TableContainer>
+                                <TableCell align="right">
+                                    {row?.type}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {row?.subscriptionDate}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {row?.expirationDate}
+                                </TableCell>
+                                <TableCell align="right">{parseInt(row?.price).toLocaleString('en')}</TableCell>
+                                <TableCell align="right">{row?.phone}</TableCell>
+                                <TableCell align="right">{parseInt(row?.debt).toLocaleString('en')}</TableCell>
+                            </TableRow>
+                        ))}
+                        {emptyRows > 0 && (
+                            <TableRow style={{height: 53 * emptyRows}}>
+                                <TableCell colSpan={6}/>
+                            </TableRow>
+                        )}
+                    </TableBody>
+
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[{label: 'All', value: -1}, 50, 25, 10]}
+                                colSpan={10}
+                                count={response?.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                ActionsComponent={TablePaginationActions}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                </Table>
+            </TableContainer>
+        </div>
     )
 }

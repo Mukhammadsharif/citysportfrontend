@@ -18,7 +18,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Textarea from '@mui/joy/Textarea';
 import {useLoad, usePostRequest, usePutRequest} from "../hooks/request";
 import {
-    GET_ALL_ORDERS,
+    CREATE_ORDER,
     GET_SUBSCRIPTIONS,
     GET_TYPES_LIST_FOR_ORDER,
     SET_BUSY_TYPE_NUMBER_FOR_ORDER
@@ -28,6 +28,8 @@ import BookmarkBorderTwoToneIcon from '@mui/icons-material/BookmarkBorderTwoTone
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import {useDispatch, useSelector} from "react-redux";
 import {changeToggle} from "../store/features/toggleSlice";
+import {ButtonGroup} from "@mui/material";
+import {getFormattedCurrentDate} from "../tools/helpers";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -42,17 +44,14 @@ const MenuProps = {
 
 const names = [
     {value: 'sauna', translation: 'Сауна'},
-    {value: 'pool', translation: 'Бассейн'},
-    {value: 'training', translation: 'Трен/зал'},
-    {value: 'billiard', translation: 'Биллиард'},
 ];
 
-export default function CreateOrder() {
+export default function CreateSaunaOrder({filterParams, setFilterParams}) {
     const token = localStorage.getItem('token')
     const dispatch = useDispatch()
     const toggle = useSelector(state => state.toggle)
     const [show, setShow] = useState(false)
-    const [type, setType] = useState('');
+    const [type, setType] = useState('sauna');
     const [typeNumber, setTypeNumber] = useState('')
     const [number, setNumber] = useState('')
     const [enterDate, setEnterDate] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ss[Z]'))
@@ -83,7 +82,7 @@ export default function CreateOrder() {
     }, [type, toggle])
 
     const createOrderRequest = usePostRequest({
-        url: GET_ALL_ORDERS,
+        url: CREATE_ORDER,
         headers: {
             Authorization: `Token ${token}`
         }
@@ -115,18 +114,18 @@ export default function CreateOrder() {
         const {response} = await createOrderRequest.request({
             data: {
                 type,
-                number,
+                number: number ? number : '0',
                 dateEntered: enterDate,
                 dateExit: exitDate,
                 summ: price,
-                debt: debt,
+                debt: debt ? debt : '0',
                 phone: phone,
                 relax: relax,
-                sauna: type === 'sauna' ? typeNumber.id : null,
-                pool: type === 'pool' ? typeNumber.id : null,
-                training: type === 'training' ? typeNumber.id : null,
-                billiard: type === 'billiard' ? typeNumber.id : null,
-                shortsNumber: shorts,
+                sauna: typeNumber.id,
+                pool: null,
+                training: null,
+                billiard: null,
+                shortsNumber: shorts ? shorts : '0',
                 subscription: chooseSubscription.id,
                 isSubscribed: subscriptionToggle,
                 additionalInfo: additionalInfo,
@@ -156,11 +155,18 @@ export default function CreateOrder() {
         }
     }
 
-    console.log(typesList)
-
     return (
         <div style={{width: '100%'}}>
-            <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                <ButtonGroup variant="contained" aria-label="outlined primary button group"
+                             sx={{height: 50, ml: 2, my: 2}}>
+                    <Button onClick={() => setFilterParams({day: getFormattedCurrentDate()})}>Сегодня</Button>
+                    <Button onClick={() => setFilterParams({seven_days: getFormattedCurrentDate()})}>7 дней</Button>
+                    <Button onClick={() => setFilterParams({month: new Date().getMonth() + 1})}>Месяц</Button>
+                    <Button onClick={() => setFilterParams({year: new Date().getFullYear()})}>Год</Button>
+                    <Button onClick={() => setFilterParams({all: 'all'})}>Все</Button>
+                </ButtonGroup>
+
                 <Button
                     onClick={() => setShow(true)}
                     sx={{height: 50, mr: 2, my: 2}}
@@ -214,6 +220,9 @@ export default function CreateOrder() {
                             onMouseDown={() => {
                                 if (!typesList) {
                                     setErrorText('Необходимо выбрать тип')
+                                    setError(true)
+                                } else if (!typesList?.filter((cab) => cab.isBusy !== true)?.length) {
+                                    setErrorText('Нет свободных мест')
                                     setError(true)
                                 }
                             }}

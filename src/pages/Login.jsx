@@ -1,33 +1,45 @@
 import React, {useState} from 'react'
-import {Avatar, Box, Button, TextField, Typography} from "@mui/material";
+import Avatar from "@mui/material/Avatar"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography"
 import Logo from '../assets/logo.png'
 import {usePostRequest} from "../hooks/request";
-import {REGISTER_USER} from "../tools/urls";
+import {LOGIN_USER} from "../tools/urls";
 import {useNavigate} from "react-router-dom";
+import Alert from "../components/AlertComponent";
 
 
-export default function Register() {
+export default function Login() {
     const navigate = useNavigate()
     const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState(false)
+    const [errorText, setErrorText] = useState('')
 
-    const userRegisterRequest = usePostRequest({
-        url: REGISTER_USER
+    const userLoginRequest = usePostRequest({
+        url: LOGIN_USER
     })
 
-    const register = async () => {
-        const {response} = await userRegisterRequest.request({
+    const login = async () => {
+        const {response, error} = await userLoginRequest.request({
             data: {
-                email, username, password
+                email, password
             }
         })
 
         if (response?.token) {
             setEmail('')
-            setUsername('')
             setPassword('')
-            navigate('/login')
+            localStorage.setItem('token', response?.token)
+            localStorage.setItem('userType', response?.isAdmin ? 'admin' : 'user')
+            navigate('/')
+        }
+
+        if (error) {
+            setError(true)
+            setErrorText('Введен неправилный логин или пароль')
         }
     }
 
@@ -46,18 +58,11 @@ export default function Register() {
             <Avatar alt="Remy Sharp" src={Logo} sx={{transform: 'scale(3)', position: 'absolute', top: '10%'}}/>
 
             <Typography variant="h4" component="h2" color={'secondary'} sx={{mb: 3}}>
-                Регистрация
+                Вход
             </Typography>
 
             <TextField
-                label="Имя пользователя"
-                color={'secondary'}
-                sx={{mb: 3, width: '40%'}}
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-            />
-
-            <TextField
+                required={true}
                 label="Электронная почта"
                 color={'secondary'}
                 sx={{mb: 3, width: '40%'}}
@@ -66,6 +71,7 @@ export default function Register() {
             />
 
             <TextField
+                required={true}
                 label="Пароль"
                 color={'secondary'}
                 sx={{mb: 3, width: '40%'}}
@@ -77,9 +83,18 @@ export default function Register() {
                 variant="contained"
                 sx={{mb: 3, width: '40%', height: 50}}
                 color={'secondary'}
-                onClick={() => register()}>
-                Регистрация
+                onClick={() => {
+                    if (email && password) {
+                        login()
+                    } else {
+                        setError(true)
+                        setErrorText('Заполните все поля!')
+                    }
+                }}>
+                Вход
             </Button>
+
+            {error ? <Alert setError={setError} errorText={errorText}/> : ''}
         </Box>
     )
 }
