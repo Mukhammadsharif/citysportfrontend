@@ -9,6 +9,8 @@ import {usePostRequest} from "../hooks/request";
 import {LOGIN_USER} from "../tools/urls";
 import {useNavigate} from "react-router-dom";
 import Alert from "../components/AlertComponent";
+import axios from "axios";
+import {domain} from "../tools/request";
 
 
 export default function Login() {
@@ -19,7 +21,7 @@ export default function Login() {
     const [errorText, setErrorText] = useState('')
 
     const userLoginRequest = usePostRequest({
-        url: LOGIN_USER
+        url: LOGIN_USER,
     })
 
     const login = async () => {
